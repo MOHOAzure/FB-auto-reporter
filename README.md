@@ -2,12 +2,12 @@
 A fb page bot automatically collects news and makes reports
 Features #2
 
-# Lib Dependency
+## Lib Dependency
 As specified in Pipfile
 
-# API Dependency
+## API Dependency
 - FB Graph
 - openweathermap
 
-# FB bot setup
+## FB bot setup
 refer to issue #1

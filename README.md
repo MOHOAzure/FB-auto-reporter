@@ -11,3 +11,7 @@ As specified in Pipfile
 
 ## FB bot setup
 refer to issue #1
+
+## Demo
+![](https://github.com/MOHOAzure/FB-auto-reporter/blob/master/demo/news-report.png)
+![](https://github.com/MOHOAzure/FB-auto-reporter/blob/master/demo/weather-report.png)

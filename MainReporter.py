@@ -2,7 +2,7 @@ import requests
 
 import config
 from WeatherNewsCollector import current_weather, forecast_weather
-from FBNewsCollector import get_group_news, get_fan_news
+from FBNewsCollector import get_news
 
 def report_current_weather():
     msg="❘༻ Current Weather Report ༺❘\n\n"
@@ -20,7 +20,7 @@ def report_current_weather():
                 )
         else:
             msg += c+" Not Found \n\n\n"
-    print( msg)
+    # print(msg)
     params = (
         ('message', msg),
         ('access_token', config.page_token),
@@ -45,7 +45,7 @@ def report_forecast_weather():
                 )
         else:
             msg += c+" Not Found \n\n\n"
-    #print( msg)
+    # print(msg)
     params = (
         ('message', msg),
         ('access_token', config.page_token),
@@ -70,17 +70,12 @@ def report_fb_page_news():
         ✦ type 2 ✦
         ...
     """
-    # collect group pages news, and classify news in types
-    group_news = get_group_news()
-    # collect fan pages news, and classify news in types
-    fan_news = get_fan_news()
-    # merge group and fan pages news
-    news = merge_dict(group_news, fan_news)
-    # make report
+    # get news and then make a report
+    news = get_news()
     msg ="༺❘༻ FB page news ༺❘༻ \n\n"
     msg += config.reporter_symbols
     for type in news:
-        count=1 # count of posts in a type
+        count=1 # count of news in a type
         msg += "§  "+type+" §\n"
         for post in news[type]:
             msg += (
@@ -91,7 +86,7 @@ def report_fb_page_news():
             )
             count+=1
         msg += "\n\n"
-    print( msg)
+    # print(msg)
     
     params = (
         ('message', msg),
@@ -100,14 +95,3 @@ def report_fb_page_news():
     response = requests.post(config.page_url, params=params)
     print(response)
     
-def merge_dict(d1, d2):
-    """
-    if a key of two dict is the same, then extend the list of that key.
-    """
-    for k in d1.keys():
-        if k in d2:
-            d1[k].extend(d2[k])
-    return d1
-    
-# Driver
-report_fb_page_news()

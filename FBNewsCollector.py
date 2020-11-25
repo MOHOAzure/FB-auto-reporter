@@ -2,6 +2,24 @@ from facebook_scraper import get_posts
 
 import config
 
+def merge_dict(d1, d2):
+    """
+    if a key of two dict is the same, then extend the list of that key.
+    """
+    for k in d1.keys():
+        if k in d2:
+            d1[k].extend(d2[k])
+    return d1
+    
+def get_news():
+    # collect group pages news, and classify news in types
+    group_news = get_group_news()
+    # collect fan pages news, and classify news in types
+    fan_news = get_fan_news()
+    # merge group and fan pages news
+    news = merge_dict(group_news, fan_news)
+    return news
+    
 def get_group_news():
     """
     type: None

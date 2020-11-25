@@ -13,5 +13,8 @@ As specified in Pipfile
 refer to issue #1
 
 ## Demo
-![](https://github.com/MOHOAzure/FB-auto-reporter/blob/master/demo/news-report.png)
-![](https://github.com/MOHOAzure/FB-auto-reporter/blob/master/demo/weather-report.png)
+### NEWS Report
+![](https://github.com/MOHOAzure/FB-auto-reporter/blob/main/demo/news-report.png)
+
+### Weather Report
+![](https://github.com/MOHOAzure/FB-auto-reporter/blob/main/demo/weather-report.png)

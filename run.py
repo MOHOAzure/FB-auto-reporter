@@ -9,7 +9,7 @@ for eachtime in config.report_current_weather_time:
     schedule.every().day.at(eachtime).do( report_current_weather )
 
 # set up time to report news
-for eachtime in config.report_current_weather_time:
+for eachtime in config.report_fb_page_news_time:
     schedule.every().day.at(eachtime).do( report_fb_page_news )
 
 # run scheduler

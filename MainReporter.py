@@ -5,7 +5,8 @@ from WeatherNewsCollector import current_weather, forecast_weather
 from FBNewsCollector import get_news
 
 def report_current_weather():
-    msg="❘༻ Current Weather Report ༺❘\n\n"
+    print("report_current_weather: working")
+    msg="༺❘༻ Current Weather Report ༺❘\n\n"
     city = config.city
     for c in city:
         res=current_weather(c)
@@ -27,9 +28,11 @@ def report_current_weather():
     )
     response = requests.post(config.page_url, params=params)
     print(response)
+    print("report_current_weather: finished")
     
 def report_forecast_weather():
-    msg="❘༻ Weather Forecast Report ༺❘\n\n"
+    print("report_forecast_weather: working")
+    msg="༺❘༻ Weather Forecast Report ༺❘\n\n"
     city = config.city
     for c in city:
         res=forecast_weather(c)
@@ -52,8 +55,10 @@ def report_forecast_weather():
     )
     response = requests.post(config.page_url, params=params)
     print(response)
+    print("report_forecast_weather: finished")
 
 def report_fb_page_news():
+    print("report_fb_page_news: working")
     """ report format
         ❘༻ FB page news ༺❘
         ✦ type 1 ✦
@@ -94,4 +99,5 @@ def report_fb_page_news():
     )
     response = requests.post(config.page_url, params=params)
     print(response)
+    print("report_fb_page_news: finished")
     

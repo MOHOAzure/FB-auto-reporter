@@ -54,20 +54,44 @@ def report_forecast_weather():
     print(response)
 
 def report_fb_page_news():
-    msg="❘༻ FB page news ༺❘\n\n"
-    
-    for type in config.group_page_urls.keys():
-        msg += "✦ "+type+" ✦\n"
-        for pid in config.group_page_urls[type]:
-            msg += get_group_news(pid)
-        msg += "\n\n"
+    """ report format
+        ❘༻ FB page news ༺❘
+        ✦ type 1 ✦
+        type #count
+        time
+        text
+        url
         
-    for type in config.fan_page_urls.keys():
-        msg += "✦ "+type+" ✦\n"
-        for pid in config.fan_page_urls[type]:
-            msg += get_fan_news(pid)
-        msg += "\n"
-    # print( msg)
+        type #count
+        time
+        text
+        url
+        
+        ✦ type 2 ✦
+        ...
+    """
+    # collect group pages news, and classify news in types
+    group_news = get_group_news()
+    # collect fan pages news, and classify news in types
+    fan_news = get_fan_news()
+    # merge group and fan pages news
+    news = merge_dict(group_news, fan_news)
+    # make report
+    msg ="༺❘༻ FB page news ༺❘༻ \n\n"
+    msg += config.reporter_symbols
+    for type in news:
+        count=1 # count of posts in a type
+        msg += "§  "+type+" §\n"
+        for post in news[type]:
+            msg += (
+                    "✦ "+type+" #"+str(count)+"\n"+
+                    post['time']+"\n"+
+                    post['text']+"\n"+
+                    post['url']+"\n\n"
+            )
+            count+=1
+        msg += "\n\n"
+    print( msg)
     
     params = (
         ('message', msg),
@@ -75,5 +99,15 @@ def report_fb_page_news():
     )
     response = requests.post(config.page_url, params=params)
     print(response)
+    
+def merge_dict(d1, d2):
+    """
+    if a key of two dict is the same, then extend the list of that key.
+    """
+    for k in d1.keys():
+        if k in d2:
+            d1[k].extend(d2[k])
+    return d1
+    
 # Driver
 report_fb_page_news()

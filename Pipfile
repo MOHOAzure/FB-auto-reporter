@@ -9,6 +9,7 @@ verify_ssl = true
 requests = "*"
 facebook-scraper = "*"
 schedule = "*"
+pixivpy = "*"
 
 [requires]
 python_version = "3.8"

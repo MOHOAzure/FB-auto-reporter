@@ -7,6 +7,11 @@ page_token='YOUR FB APP TOKEN'
 # API key of openweathermap
 api_key = 'OPENWEATHERMAP API KEY'
 
+# pixiv
+pixiv_base_url="https://www.pixiv.net/artworks/"
+pixiv_account=""
+pixiv_pw=""
+
 # city of interest
 city = ['Taipei']
 

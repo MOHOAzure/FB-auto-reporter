@@ -3,6 +3,7 @@ import requests
 import config
 from WeatherNewsCollector import current_weather, forecast_weather
 from FBNewsCollector import get_news
+from PicCollector import get_pic
 
 def report_current_weather():
     print("report_current_weather: working")
@@ -100,3 +101,31 @@ def report_fb_page_news():
     response = requests.post(config.page_url, params=params)
     print(response)
     print("report_fb_page_news: finished")
+
+def report_pixiv_pic():
+    print("report_pixiv_pic: working")
+    msg="༺❘༻Pixiv Recommendation ༺❘༻ \n\n"
+    pic=get_pic()    
+    author=pic["author"]
+    url=pic["url"]
+    view=pic["total_view"]
+    bookmarks=pic["total_bookmarks"]
+    date=pic["create_date"]
+    tags=pic["tags"]
+    msg += (
+        "author: "+author+"\n"+
+        "url: "+url+"\n"+
+        "create_date: "+date+"\n"+
+        "total_view: "+view+"\n"+
+        "total_bookmarks: "+bookmarks+"\n"+
+        "tags: "+tags+"\n"
+    )
+    # print(msg)
+    params = (
+        ('message', msg),
+        ('link', url),
+        ('access_token', config.page_token),
+    )
+    response = requests.post(config.page_url, params=params)
+    print(response)
+    print("report_pixiv_pic: finished")

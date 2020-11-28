@@ -27,7 +27,7 @@ def get_pic():
         "total_view":str(illust.total_view),
         "total_bookmarks": str(illust.total_bookmarks),
         "create_date":str(illust.create_date),
-        "tags": (', '.join( ['#'+t.name for t in illust.tags] )),
+        "tags": (', '.join( ['#'+(t.name) for t in illust.tags] )),
     }
     return pic
 

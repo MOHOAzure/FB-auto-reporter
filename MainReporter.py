@@ -1,12 +1,19 @@
-import requests
+import requests, inspect
+
+import logging, logging.config
+logging.config.fileConfig('logging.conf')
+file_logger=logging.getLogger('fileLogger')
+console_logger=logging.getLogger()
 
 import config
 from WeatherNewsCollector import current_weather, forecast_weather
 from FBNewsCollector import get_news
 from PicCollector import get_pic
+from MyLogger import file_log_helper
 
 def report_current_weather():
-    print("report_current_weather: working")
+    func_name = inspect.currentframe().f_code.co_name
+    console_logger.debug(func_name+": working")
     msg="༺❘༻ Current Weather Report ༺❘༻ \n\n"
     city = config.city
     for c in city:
@@ -22,17 +29,25 @@ def report_current_weather():
                 )
         else:
             msg += c+" Not Found \n\n\n"
-    # print(msg)
+         
+    file_log_helper(logging.DEBUG, func_name, msg)   
     params = (
         ('message', msg),
         ('access_token', config.page_token),
     )
     response = requests.post(config.page_url, params=params)
-    print(response)
-    print("report_current_weather: finished")
+    
+    # log a returned fb post or error message
+    if response.status_code==200:
+        file_log_helper(logging.INFO, func_name, response)
+    else:
+        file_log_helper(logging.ERROR, func_name, response)
+        
+    console_logger.debug(func_name+": finished")
     
 def report_forecast_weather():
-    print("report_forecast_weather: working")
+    func_name = inspect.currentframe().f_code.co_name
+    console_logger.debug(func_name+": working")
     msg="༺❘༻ Weather Forecast Report ༺❘༻ \n\n"
     city = config.city
     for c in city:
@@ -49,17 +64,24 @@ def report_forecast_weather():
                 )
         else:
             msg += c+" Not Found \n\n\n"
-    # print(msg)
+    file_log_helper(logging.DEBUG, func_name, msg)
     params = (
         ('message', msg),
         ('access_token', config.page_token),
     )
     response = requests.post(config.page_url, params=params)
-    print(response)
-    print("report_forecast_weather: finished")
+    
+    # log a returned fb post or error message
+    if response.status_code==200:
+        file_log_helper(logging.INFO, func_name, response)
+    else:
+        file_log_helper(logging.ERROR, func_name, response)
+        
+    console_logger.debug(func_name+": finished")
 
 def report_fb_page_news():
-    print("report_fb_page_news: working")
+    func_name = inspect.currentframe().f_code.co_name
+    console_logger.debug(func_name+": working")
     """ report format
         ❘༻ FB page news ༺❘
         ✦ type 1 ✦
@@ -92,18 +114,24 @@ def report_fb_page_news():
             )
             count+=1
         msg += "\n\n"
-    # print(msg)
+    file_log_helper(logging.DEBUG, func_name, msg)
     
     params = (
         ('message', msg),
         ('access_token', config.page_token),
     )
     response = requests.post(config.page_url, params=params)
-    print(response)
-    print("report_fb_page_news: finished")
+    # log a returned fb post or error message
+    if response.status_code==200:
+        file_log_helper(logging.INFO, func_name, response)
+    else:
+        file_log_helper(logging.ERROR, func_name, response)
+        
+    console_logger.debug(func_name+": finished")
 
-def report_pixiv_pic():
-    print("report_pixiv_pic: working")
+def report_pic():
+    func_name = inspect.currentframe().f_code.co_name
+    console_logger.debug(func_name+": working")
     msg="༺❘༻Pixiv Recommendation ༺❘༻ \n\n"
     pic=get_pic()    
     author=pic["author"]
@@ -113,19 +141,33 @@ def report_pixiv_pic():
     date=pic["create_date"]
     tags=pic["tags"]
     msg += (
-        "author: "+author+"\n"+
-        "url: "+url+"\n"+
-        "create_date: "+date+"\n"+
-        "total_view: "+view+"\n"+
-        "total_bookmarks: "+bookmarks+"\n"+
-        "tags: "+tags+"\n"
+        "Author: "+author+"\n"+
+        "Url: "+url+"\n"+
+        "Create_date: "+date+"\n"+
+        "Total_view: "+view+"\n"+
+        "Total_bookmarks: "+bookmarks+"\n"+
+        "Tags: "+tags+"\n"
     )
-    # print(msg)
+    file_log_helper(logging.DEBUG, func_name, msg)
     params = (
         ('message', msg),
         ('link', url),
         ('access_token', config.page_token),
     )
     response = requests.post(config.page_url, params=params)
-    print(response)
-    print("report_pixiv_pic: finished")
+    
+    # log a returned fb post or error message
+    if response.status_code==200:
+        file_log_helper(logging.INFO, func_name, response)
+    else:
+        file_log_helper(logging.ERROR, func_name, response)
+        
+    console_logger.debug(func_name+": finished")
+
+"""
+Quick test
+"""
+# report_current_weather()
+# report_forecast_weather()
+# report_fb_page_news()
+# report_pic()

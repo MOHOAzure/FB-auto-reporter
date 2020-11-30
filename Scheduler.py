@@ -14,7 +14,12 @@ def convert_time(tz, the_time):
         the_time: the scheduled time (HH:MM)
     
     rtype:
-        the_time: the scheduled time (HH:MM) based on the specified tz regardless of server's time zone
+        the_time: the scheduled time (HH:MM) based on the time zone of machine running this app
+        
+    description:
+        The scheduled time in config file is based on time zone 'tz', which may be different from the time zone of the machine in a cloud
+        Since the library schedule has no time zone setting, the scheduled time is interpreted as local time of the machine running this app.
+        Therefore, this function is developed for converting time for the machine, and the tasks of this app are scheduled as expected in the specfied tz.
     """
     machine_tz_sec= (time.localtime().tm_gmtoff) # get the time zone of machine, tm_gmtoff returns east of UTC in seconds
     delta_zone = tz[0]

@@ -18,7 +18,7 @@ def run():
         schedule.every().day.at(eachtime).do( report_fb_page_news )
 
     # set up time to report pictures
-    schedule.every().minute.do( report_pic )
+    schedule.every().hours.do( report_pic )
 
     # run scheduler
     console_logger.info("Tasks are scheduled")

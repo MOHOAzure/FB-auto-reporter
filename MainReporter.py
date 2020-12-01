@@ -7,9 +7,6 @@ console_logger=logging.getLogger()
 
 from conf import secret, config_reporter
 from collector import FBNewsCollector, WeatherNewsCollector, PicCollector
-# from WeatherNewsCollector import current_weather, forecast_weather
-# from FBNewsCollector import get_news
-# from PicCollector import get_pic
 from MyLogger import file_log_helper
 
 def report_current_weather():

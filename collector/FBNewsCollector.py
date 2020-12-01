@@ -1,10 +1,10 @@
 """
 A script to collect news of fb fan pages and group pages
 """
-from datetime import datetime
+import time, datetime
 
 from facebook_scraper import get_posts
-from conf import secret, config_reporter
+from conf import secret, config_reporter, config_schedule
 
 def merge_dict(d1, d2):
     """
@@ -14,6 +14,28 @@ def merge_dict(d1, d2):
         if k in d2:
             d1[k].extend(d2[k])
     return d1
+
+def get_today_of_tz():
+    """
+    rtype:(datetime object)
+        the date converted to the specified time zone where users resident
+    """
+    today = datetime.datetime.today() # today of machine
+    tz = config_schedule.tz # the specified time zone
+    machine_tz_sec= (time.localtime().tm_gmtoff) # the time zone of machine, tm_gmtoff returns east of UTC in seconds
+    delta_zone = tz[0]
+    delta_hour = int(tz[1:3])
+    delta_minute = int(tz[3:])
+    delta_sec = (delta_hour*3600)+(delta_minute*60)
+    delta = datetime.timedelta(seconds= delta_sec-machine_tz_sec)
+    
+    # today of the specified time zone
+    if delta_zone == "+":
+        today -= delta
+    elif delta_zone == "-":
+        today += delta
+        
+    return today
     
 def get_news():
     # collect group pages news, and classify news in types
@@ -45,7 +67,7 @@ def get_group_news():
             group_news[type]=[]
         for pid in config_reporter.group_page_urls[type]:
             for post in get_posts(group=pid, pages=1):
-                if datetime.today().date() == post['time'].date(): # Bug fix - tz of cloud
+                if get_today_of_tz().date() == post['time'].date():
                     a_post = {}
                     a_post['time']=str(post['time'])
                     a_post['text']=post['text'][:50]
@@ -79,7 +101,7 @@ def get_fan_news():
             fan_news[type]=[]
         for pid in config_reporter.fan_page_urls[type]:
             for post in get_posts(group=pid, pages=1):
-                if datetime.today().date() == post['time'].date():
+                if get_today_of_tz().date() == post['time'].date():
                     a_post = {}
                     a_post['time']=str(post['time'])
                     a_post['text']=post['text'][:50]

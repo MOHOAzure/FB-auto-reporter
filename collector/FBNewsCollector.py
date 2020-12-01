@@ -31,9 +31,9 @@ def get_today_of_tz():
     
     # today of the specified time zone
     if delta_zone == "+":
-        today -= delta
-    elif delta_zone == "-":
         today += delta
+    elif delta_zone == "-":
+        today -= delta
         
     return today
     

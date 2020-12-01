@@ -1,7 +1,10 @@
+"""
+A script to collect news of fb fan pages and group pages
+"""
 from datetime import datetime
 
 from facebook_scraper import get_posts
-import config
+from conf import secret, config_reporter
 
 def merge_dict(d1, d2):
     """
@@ -37,12 +40,12 @@ def get_group_news():
     """
     group_news={}
     
-    for type in config.group_page_urls.keys():
+    for type in config_reporter.group_page_urls.keys():
         if type not in group_news:
             group_news[type]=[]
-        for pid in config.group_page_urls[type]:
+        for pid in config_reporter.group_page_urls[type]:
             for post in get_posts(group=pid, pages=1):
-                if datetime.today().date() == post['time'].date():
+                if datetime.today().date() == post['time'].date(): # Bug fix - tz of cloud
                     a_post = {}
                     a_post['time']=str(post['time'])
                     a_post['text']=post['text'][:50]
@@ -51,7 +54,7 @@ def get_group_news():
                         a_post['url']= "www.facebook.com/groups/"+pid+"/permalink/"+str(post['post_id'])
                     else:
                         a_post['url']= post['post_url']
-                    # ignore the news has no link
+                    # ignore the news has no link to any fb pages or shared content
                     if a_post['url']:
                         group_news[type].append(a_post)
     return group_news
@@ -71,10 +74,10 @@ def get_fan_news():
     }
     """    
     fan_news={}    
-    for type in config.fan_page_urls.keys():
+    for type in config_reporter.fan_page_urls.keys():
         if type not in fan_news:
             fan_news[type]=[]
-        for pid in config.fan_page_urls[type]:
+        for pid in config_reporter.fan_page_urls[type]:
             for post in get_posts(group=pid, pages=1):
                 if datetime.today().date() == post['time'].date():
                     a_post = {}

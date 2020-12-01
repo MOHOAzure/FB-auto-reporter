@@ -1,23 +1,24 @@
 import requests, inspect
 
 import logging, logging.config
-logging.config.fileConfig('logging.conf')
+logging.config.fileConfig('conf/logging.conf')
 file_logger=logging.getLogger('fileLogger')
 console_logger=logging.getLogger()
 
-import config
-from WeatherNewsCollector import current_weather, forecast_weather
-from FBNewsCollector import get_news
-from PicCollector import get_pic
+from conf import secret, config_reporter
+from collector import FBNewsCollector, WeatherNewsCollector, PicCollector
+# from WeatherNewsCollector import current_weather, forecast_weather
+# from FBNewsCollector import get_news
+# from PicCollector import get_pic
 from MyLogger import file_log_helper
 
 def report_current_weather():
     func_name = inspect.currentframe().f_code.co_name
     console_logger.debug(func_name+": working")
     msg="༺❘༻ Current Weather Report ༺❘༻ \n\n"
-    city = config.city
+    city = config_reporter.city
     for c in city:
-        res=current_weather(c)
+        res= WeatherNewsCollector.current_weather(c)
         if res['code'] == 200:
             msg += (
                     "✦ "+c+" ✦\n"+
@@ -33,9 +34,9 @@ def report_current_weather():
     file_log_helper(logging.DEBUG, func_name, msg)   
     params = (
         ('message', msg),
-        ('access_token', config.page_token),
+        ('access_token', secret.page_token),
     )
-    response = requests.post(config.page_url, params=params)
+    response = requests.post(secret.page_url, params=params)
     
     # log a returned fb post or error message
     if response.status_code==200:
@@ -49,9 +50,9 @@ def report_forecast_weather():
     func_name = inspect.currentframe().f_code.co_name
     console_logger.debug(func_name+": working")
     msg="༺❘༻ Weather Forecast Report ༺❘༻ \n\n"
-    city = config.city
+    city = config_reporter.city
     for c in city:
-        res=forecast_weather(c)
+        res=WeatherNewsCollector.forecast_weather(c)
         if res['code'] == '200':
             msg += (
                     "✦ "+c+" ✦\n"+
@@ -67,9 +68,9 @@ def report_forecast_weather():
     file_log_helper(logging.DEBUG, func_name, msg)
     params = (
         ('message', msg),
-        ('access_token', config.page_token),
+        ('access_token', secret.page_token),
     )
-    response = requests.post(config.page_url, params=params)
+    response = requests.post(secret.page_url, params=params)
     
     # log a returned fb post or error message
     if response.status_code==200:
@@ -99,9 +100,9 @@ def report_fb_page_news():
         ...
     """
     # get news and then make a report
-    news = get_news()
+    news = FBNewsCollector.get_news()
     msg ="༺❘༻ FB page news ༺❘༻ \n\n"
-    msg += config.reporter_symbols
+    msg += config_reporter.reporter_symbols
     for type in news:
         count=1 # count of news in a type
         msg += "§  "+type+" §\n"
@@ -118,9 +119,9 @@ def report_fb_page_news():
     
     params = (
         ('message', msg),
-        ('access_token', config.page_token),
+        ('access_token', secret.page_token),
     )
-    response = requests.post(config.page_url, params=params)
+    response = requests.post(secret.page_url, params=params)
     # log a returned fb post or error message
     if response.status_code==200:
         file_log_helper(logging.INFO, func_name, response)
@@ -133,7 +134,7 @@ def report_pic():
     func_name = inspect.currentframe().f_code.co_name
     console_logger.debug(func_name+": working")
     msg="༺❘༻Pixiv Recommendation ༺❘༻ \n\n"
-    pic=get_pic()    
+    pic= PicCollector.get_pic()    
     author=pic["author"]
     url=pic["url"]
     view=pic["total_view"]
@@ -152,9 +153,9 @@ def report_pic():
     params = (
         ('message', msg),
         ('link', url),
-        ('access_token', config.page_token),
+        ('access_token', secret.page_token),
     )
-    response = requests.post(config.page_url, params=params)
+    response = requests.post(secret.page_url, params=params)
     
     # log a returned fb post or error message
     if response.status_code==200:

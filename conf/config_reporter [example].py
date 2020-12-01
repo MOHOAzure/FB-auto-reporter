@@ -1,16 +1,8 @@
-# FB page url
-page_url='YOUR FAN PAGE'
+# base url of openweathermap
+base_url_openweathermap = "http://api.openweathermap.org/data/2.5/forecast?"
 
-# FB page token
-page_token='YOUR FB APP TOKEN'
-
-# API key of openweathermap
-api_key = 'OPENWEATHERMAP API KEY'
-
-# pixiv
-pixiv_base_url="https://www.pixiv.net/artworks/"
-pixiv_account=""
-pixiv_pw=""
+# base url of pixiv
+base_url_pixiv="https://www.pixiv.net/artworks/"
 
 # city of interest
 city = ['Taipei']

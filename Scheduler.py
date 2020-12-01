@@ -1,11 +1,11 @@
 import schedule, time, datetime
 
 import logging, logging.config
-logging.config.fileConfig('logging.conf')
+logging.config.fileConfig('conf/logging.conf')
 console_logger=logging.getLogger()
 
 from MainReporter import report_current_weather, report_forecast_weather, report_fb_page_news, report_pic
-import config, config_schedule
+from conf import config_schedule
 
 def convert_time(tz, the_time):
     """
@@ -50,7 +50,12 @@ def run():
         schedule.every().day.at(eachtime).do( report_fb_page_news )
 
     # set up time to report pictures
-    schedule.every().hour.do( report_pic )
+    if config_schedule.frequency_report_pic=="TEST":
+        schedule.every().minute.do( report_pic )
+    elif config_schedule.frequency_report_pic=="HOUR":
+        schedule.every().hour.do( report_pic )
+    elif config_schedule.frequency_report_pic=="NONE":
+        pass
 
     # run scheduler
     console_logger.info("Tasks are scheduled")

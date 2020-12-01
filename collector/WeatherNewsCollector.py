@@ -1,12 +1,10 @@
-# Python program to find current  
-# weather details of any city 
-# using openweathermap api 
-  
-# import required modules 
+"""
+A script to collect weather of a specified city using openweathermap api 
+"""
 import requests, json 
 from datetime import datetime
   
-import config
+from conf import secret, config_reporter
 
 def forecast_weather(city_name):
     """
@@ -28,8 +26,8 @@ def forecast_weather(city_name):
     check response format: https://openweathermap.org/forecast5#JSON    
     """
     # API url
-    base_url = "http://api.openweathermap.org/data/2.5/forecast?"
-    complete_url = base_url + "appid=" + config.api_key + "&q=" + city_name 
+    base_url = config_reporter.base_url_openweathermap
+    complete_url = base_url + "appid=" + secret.api_key + "&q=" + city_name 
       
     # get method of requests module 
     # return response object 
@@ -102,7 +100,7 @@ def current_weather(city_name):
     """
     # API url
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
-    complete_url = base_url + "appid=" + config.api_key + "&q=" + city_name 
+    complete_url = base_url + "appid=" + secret.api_key + "&q=" + city_name 
       
     # get method of requests module 
     # return response object 

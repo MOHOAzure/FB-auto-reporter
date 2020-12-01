@@ -1,5 +1,5 @@
 import logging, logging.config
-logging.config.fileConfig('logging.conf')
+logging.config.fileConfig('conf/logging.conf')
 file_logger=logging.getLogger('fileLogger')
 
 def file_log_helper(level, func_name, response):

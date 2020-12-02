@@ -8,7 +8,6 @@ def setup():
     log_folder = "log"
     log_name = "log.log"
     log = Path(log_folder,log_name)
-    print(log)
     if log.is_file():
         pass
     else:

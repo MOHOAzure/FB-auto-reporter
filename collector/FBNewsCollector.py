@@ -15,12 +15,14 @@ def merge_dict(d1, d2):
             d1[k].extend(d2[k])
     return d1
 
-def get_today_of_tz():
+def convert_time(the_time):
     """
-    rtype:(datetime object)
-        the date converted to the specified time zone where users resident
+    type: 
+        the_time:(datetime object)
+    
+    rtype:
+        the date (datetime object) converted to the specified time zone where users resident
     """
-    today = datetime.datetime.today() # today of machine
     tz = config_schedule.tz # the specified time zone
     machine_tz_sec= (time.localtime().tm_gmtoff) # the time zone of machine, tm_gmtoff returns east of UTC in seconds
     delta_zone = tz[0]
@@ -29,13 +31,13 @@ def get_today_of_tz():
     delta_sec = (delta_hour*3600)+(delta_minute*60)
     delta = datetime.timedelta(seconds= delta_sec-machine_tz_sec)
     
-    # today of the specified time zone
+    # convert to time in the specified time zone
     if delta_zone == "+":
-        today += delta
+        the_time += delta
     elif delta_zone == "-":
-        today -= delta
+        the_time -= delta
         
-    return today
+    return the_time
     
 def get_news():
     # collect group pages news, and classify news in types
@@ -67,7 +69,10 @@ def get_group_news():
             group_news[type]=[]
         for pid in config_reporter.group_page_urls[type]:
             for post in get_posts(group=pid, pages=1):
-                if get_today_of_tz().date() == post['time'].date():
+                # only collect today's news
+                today = datetime.datetime.today() # today of machine
+                post_time = post['time'] # the time when a post is created                
+                if convert_time(today).date() == convert_time(post_time).date():
                     a_post = {}
                     a_post['time']=str(post['time'])
                     a_post['text']=post['text'][:50]

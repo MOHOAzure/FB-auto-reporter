@@ -10,6 +10,7 @@ requests = "*"
 facebook-scraper = "*"
 schedule = "*"
 pixivpy = "*"
+flask = "*"
 
 [requires]
 python_version = "3.8"

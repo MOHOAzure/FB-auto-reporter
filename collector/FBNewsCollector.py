@@ -69,12 +69,12 @@ def get_group_news():
             group_news[type]=[]
         for pid in config_reporter.group_page_urls[type]:
             for post in get_posts(group=pid, pages=1):
-                # only collect today's news
-                today = datetime.datetime.today() # today of machine
-                post_time = post['time'] # the time when a post is created                
-                if convert_time(today).date() == convert_time(post_time).date():
+                # only collect news of today (in specified tz) 
+                today = convert_time(datetime.datetime.today()) # today of machine
+                post_time = convert_time(post['time']) # the time when a post is created
+                if today.date() == post_time.date():
                     a_post = {}
-                    a_post['time']=str(post['time'])
+                    a_post['time']=str(post_time)
                     a_post['text']=post['text'][:50]
                     a_post['url']=""
                     if post['post_id']:
@@ -106,9 +106,12 @@ def get_fan_news():
             fan_news[type]=[]
         for pid in config_reporter.fan_page_urls[type]:
             for post in get_posts(group=pid, pages=1):
-                if get_today_of_tz().date() == post['time'].date():
+                # only collect news of today (in specified tz) 
+                today = convert_time(datetime.datetime.today()) # today of machine
+                post_time = convert_time(post['time']) # the time when a post is created
+                if today.date() == post_time.date():
                     a_post = {}
-                    a_post['time']=str(post['time'])
+                    a_post['time']=str(post_time)
                     a_post['text']=post['text'][:50]
                     a_post['url']=""
                     if post['post_id']:

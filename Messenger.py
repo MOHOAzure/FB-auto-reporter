@@ -1,13 +1,15 @@
-import requests
+import requests, inspect
+
 from flask import Flask, request
 app = Flask(__name__)
 
+import logging, logging.config
+logging.config.fileConfig('conf/logging.conf')
+file_logger=logging.getLogger('fileLogger')
+from MyLogger import file_log_helper
+
 from conf import secret
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
-    
 @app.route('/webhook',methods=['GET'])
 def webhook_authorization():
     verify_token = request.args.get("hub.verify_token")
@@ -33,6 +35,23 @@ def webhook_handle():
         response = requests.post(url,json=request_body).json()
         return response
     return 'ok'
+
+def send_admin_report(msg):
+    func_name = inspect.currentframe().f_code.co_name
+    request_body = {
+            'recipient': {
+                'id': secret.admin_PSID
+            },
+            'message': {"text":msg}
+        }
+    url = 'https://graph.facebook.com/v9.0/me/messages?access_token='+secret.webhook_token
+    response = requests.post(url,json=request_body)
     
+    # log this event or an error message
+    if response.status_code==200:
+        file_log_helper(logging.INFO, func_name, response)
+    else:
+        file_log_helper(logging.ERROR, func_name, response)
+
 if __name__ == "__main__":
     app.run(threaded=True, port=5000)
